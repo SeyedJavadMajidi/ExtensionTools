@@ -1,7 +1,6 @@
 plugins {
-    alias(libs.plugins.androidLibrary)
     id 'maven-publish'
-
+    alias(libs.plugins.androidLibrary)
 }
 
 android {
@@ -18,7 +17,10 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            release {
+                debuggable false
+                minifyEnabled false
+            }
         }
     }
     compileOptions {
@@ -26,11 +28,11 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
-    publishing {
-        singleVariant("release") {
-
-        }
-    }
+//    publishing {
+//        singleVariant("release") {
+//
+//        }
+//    }
 }
 
 dependencies {
