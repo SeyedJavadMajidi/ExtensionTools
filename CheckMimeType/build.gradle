@@ -30,11 +30,11 @@ android {
         targetCompatibility JavaVersion.VERSION_11
     }
 
-    publishing {
-        singleVariant("release") {
-
-        }
-    }
+//    publishing {
+//        singleVariant("release") {
+//
+//        }
+//    }
 }
 
 dependencies {
