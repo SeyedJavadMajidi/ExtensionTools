@@ -51,7 +51,7 @@ afterEvaluate {
         publications {
             release(MavenPublication) {
                 from components.release
-                groupId = 'com.github.softjam'
+                groupId = 'com.github.seyedjavadmajidi'
                 artifactId = 'extensiontools'
                 version = '0.1'
             }

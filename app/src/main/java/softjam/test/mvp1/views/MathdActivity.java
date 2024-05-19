@@ -19,7 +19,7 @@ import java.net.URLConnection;
 
 import softjam.test.mvp1.R;
 import softjam.test.mvp1.presenters.MathdActivityPresenter;
-import softjam.tools.mimetype.JMimeType;
+//import softjam.tools.mimetype.JMimeType;
 
 public class MathdActivity extends AppCompatActivity implements MathdActivityPresenter.MyView {
     MathdActivityPresenter mathdActivityPresenter;
@@ -29,8 +29,8 @@ public class MathdActivity extends AppCompatActivity implements MathdActivityPre
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_mathd);
-        JMimeType jMimeType = new JMimeType();
-        Log.d("KAKAKAKKA",jMimeType.searchFor(".apk"));
+//        JMimeType jMimeType = new JMimeType();
+//        Log.d("KAKAKAKKA",jMimeType.searchFor(".apk"));
         mathdActivityPresenter = new MathdActivityPresenter(this);
         btn = (Button) findViewById(R.id.button);
         btn.setOnClickListener(new View.OnClickListener() {
