@@ -1,41 +1,83 @@
 package softjam.tools.mimetype;
 
+import android.content.Context;
+import android.os.AsyncTask;
 import android.util.Log;
+import android.webkit.MimeTypeMap;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
+import java.io.IOException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class JMimeType {
+    private int countRedirect = 0;
 
-    ArrayList<String[]> files;
+    public boolean CheckWithMimetype(ArrayList<String> list, String url) {
+        String mimetype = GetMimetypeFromUrlAdvanced(url);
+        return list.contains(mimetype);
+    }
 
-    public JMimeType() {
+    public boolean CheckWithExtension(ArrayList<String> list, String url) {
+        String extension = GetExtensionFromUrlAdvanced(url);
+        return list.contains(extension);
+    }
+
+    public String GetExtensionFromUrlAdvanced(String urlString) {
+        return GetExtensionFromMimetype(GetMimetypeFromUrlAdvanced(urlString));
+    }
+
+    public String GetMimetypeFromUrlAdvanced(String urlString) {
+        URL url = null;
         try {
-            JSONArray obj = new JSONArray((new dt()).json);
-            files = new ArrayList<>();
-            for (int i = 0; i < obj.length(); i++) {
-                JSONObject js = obj.getJSONObject(i);
-                JSONArray jsonArray = js.getJSONArray("fileTypes");
-                for (int j = 0; j < jsonArray.length(); j++) {
-                    files.add(new String[]{js.getString("name"), jsonArray.getString(j)});
+            url = new URL(urlString);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("HEAD");
+            if (isRedirect(connection.getResponseCode())) {
+                if (countRedirect == 2) {
+                    countRedirect = 0;
+                    return "Error1";
                 }
+                String newUrl = connection.getHeaderField("Location");
+                return GetMimetypeFromUrlAdvanced(newUrl);
             }
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+            return connection.getContentType();
+        } catch (ProtocolException e) {
+            return "Error2";
+        } catch (MalformedURLException e) {
+            return "Error3";
+        } catch (IOException e) {
+            return "Error4";
         }
+//        return "Error5";
     }
 
-    public String searchFor(String data) {
-        for (int i = 0; i < files.size(); i++) {
-            String[] unitString = files.get(i);
-            if (unitString[1].contains(data)) {
-                return unitString[0];
+    protected boolean isRedirect(int statusCode) {
+        if (statusCode != HttpURLConnection.HTTP_OK) {
+            if (statusCode == HttpURLConnection.HTTP_MOVED_TEMP || statusCode == HttpURLConnection.HTTP_MOVED_PERM || statusCode == HttpURLConnection.HTTP_SEE_OTHER) {
+                countRedirect++;
+                return true;
             }
         }
-        return "Error";
+        return false;
     }
+
+    public String GetMimetypeFromUrlBasic(String url) {
+        url = url.substring(url.lastIndexOf(".") + 1);
+        return GetMimetypeFromExtension(url);
+    }
+
+    public String GetMimetypeFromExtension(String url) {
+        MimeTypeMap m = MimeTypeMap.getSingleton();
+        return m.getMimeTypeFromExtension(url);
+    }
+
+    public String GetExtensionFromMimetype(String url) {
+        MimeTypeMap m = MimeTypeMap.getSingleton();
+        return m.getExtensionFromMimeType(url);
+    }
+
+
 }

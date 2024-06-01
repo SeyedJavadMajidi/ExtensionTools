@@ -1,8 +1,8 @@
 package softjam.test.mvp1.views;
 
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.os.Bundle;
-import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import java.util.ArrayList;
+
 import softjam.test.mvp1.presenters.MainActivityPresenter;
 import softjam.test.mvp1.R;
 
@@ -19,61 +21,45 @@ public class MainActivity extends AppCompatActivity implements MainActivityPrese
 
     private MainActivityPresenter presenter;
     private TextView myTextView;
-    public EditText userName;
-    public EditText email;
+    public EditText urlFile;
     private ProgressBar progressBar;
+    private Button btnCheck;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        InitObject();
 
+        ArrayList<String> mims = new ArrayList<String>();
+        mims.add("image/jpeg");
+        mims.add("image/png");
+        presenter.addMimeTypes(mims);
+
+        btnCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.Check(urlFile.getText().toString());
+            }
+        });
+    }
+
+    private void InitObject() {
         presenter = new MainActivityPresenter(this);
-
         myTextView = findViewById(R.id.myTextView);
-        userName = findViewById(R.id.username);
-        email = findViewById(R.id.email);
-        Button btnemail = findViewById(R.id.btnEmail);
-        Button btnuser = findViewById(R.id.btnUser);
-        initProgressBar();
-
-        btnemail.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.updateFullName(userName.getText().toString());
-            }
-        });
-        btnuser.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                presenter.updateEmail(email.getText().toString());
-            }
-        });
-
-    }
-
-    private void initProgressBar() {
-        progressBar = new ProgressBar(this, null, android.R.attr.progressBarStyleSmall);
-        progressBar.setIndeterminate(true);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(Resources.getSystem().getDisplayMetrics().widthPixels,
-                250);
-        params.addRule(RelativeLayout.CENTER_IN_PARENT);
-        this.addContentView(progressBar, params);
-        showProgressBar();
+        urlFile = findViewById(R.id.urlFile);
+        btnCheck = findViewById(R.id.btnCheck);
     }
 
     @Override
-    public void updateUserInfoTextView(String info) {
-        myTextView.setText(info);
+    public void Success(String message) {
+        myTextView.setTextColor(Color.GREEN);
+        myTextView.setText(message);
     }
 
     @Override
-    public void showProgressBar() {
-        progressBar.setVisibility(View.VISIBLE);
-    }
-
-    @Override
-    public void hideProgressBar() {
-        progressBar.setVisibility(View.INVISIBLE);
+    public void Failure(String message) {
+        myTextView.setTextColor(Color.RED);
+        myTextView.setText(message);
     }
 }

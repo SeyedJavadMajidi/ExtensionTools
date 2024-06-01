@@ -8,26 +8,19 @@
     android:orientation="vertical"
     tools:context=".views.MainActivity">
 
-<TextView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/myTextView"/>
     <EditText
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/username"/>
+        android:id="@+id/urlFile"/>
+
     <Button
+        android:id="@+id/btnCheck"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="User"
-        android:id="@+id/btnUser"/>
-    <EditText
+        android:text="Check" />
+
+    <TextView
+        android:id="@+id/myTextView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:id="@+id/email"/>
-    <Button
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Email"
-        android:id="@+id/btnEmail"/>
+        android:layout_height="wrap_content" />
 </LinearLayout>
